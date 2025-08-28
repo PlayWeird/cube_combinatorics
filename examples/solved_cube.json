@@ -1,0 +1,18 @@
+{
+  "format_version": "1.0",
+  "cube_state": {
+    "faces": {
+      "U": [["W", "W", "W"], ["W", "W", "W"], ["W", "W", "W"]],
+      "D": [["Y", "Y", "Y"], ["Y", "Y", "Y"], ["Y", "Y", "Y"]],
+      "F": [["R", "R", "R"], ["R", "R", "R"], ["R", "R", "R"]],
+      "B": [["O", "O", "O"], ["O", "O", "O"], ["O", "O", "O"]],
+      "L": [["G", "G", "G"], ["G", "G", "G"], ["G", "G", "G"]],
+      "R": [["B", "B", "B"], ["B", "B", "B"], ["B", "B", "B"]]
+    }
+  },
+  "metadata": {
+    "timestamp": "2024-01-01T00:00:00Z",
+    "scramble": null,
+    "description": "Solved cube state"
+  }
+}

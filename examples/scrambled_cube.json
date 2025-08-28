@@ -1,0 +1,18 @@
+{
+  "format_version": "1.0",
+  "cube_state": {
+    "faces": {
+      "U": [["Y", "G", "W"], ["B", "W", "R"], ["O", "W", "W"]],
+      "D": [["R", "O", "Y"], ["G", "Y", "Y"], ["B", "Y", "G"]],
+      "F": [["W", "R", "O"], ["W", "R", "B"], ["R", "R", "Y"]],
+      "B": [["B", "O", "G"], ["O", "O", "O"], ["W", "G", "O"]],
+      "L": [["Y", "B", "R"], ["Y", "G", "G"], ["B", "G", "G"]],
+      "R": [["O", "W", "R"], ["R", "B", "B"], ["Y", "O", "B"]]
+    }
+  },
+  "metadata": {
+    "timestamp": "2024-01-01T00:00:00Z",
+    "scramble": "F R U' R' U F' R U R' U'",
+    "description": "Scrambled cube example"
+  }
+}
