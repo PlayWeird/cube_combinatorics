@@ -166,6 +166,35 @@ python main.py scramble -n 20 -o scrambled.json
 - Solving: < 5 seconds for any valid configuration
 - Memory usage: < 100MB for typical operations
 
+## Position Numbering Convention
+
+Each cube face uses **top-left to bottom-right** numbering (reading order):
+
+```
+         Up (U)
+      1  2  3
+      4  5  6
+      7  8  9
+
+Left   Front  Right  Back
+10 11 12 | 19 20 21 | 28 29 30 | 37 38 39
+13 14 15 | 22 23 24 | 31 32 33 | 40 41 42  
+16 17 18 | 25 26 27 | 34 35 36 | 43 44 45
+
+        Down (D)
+     46 47 48
+     49 50 51
+     52 53 54
+```
+
+**Face Assignments:**
+- **U (1-9)**: White (Up face)
+- **L (10-18)**: Green (Left face)
+- **F (19-27)**: Red (Front face)
+- **R (28-36)**: Blue (Right face)
+- **B (37-45)**: Orange (Back face)
+- **D (46-54)**: Yellow (Down face)
+
 ## Mathematical Foundation
 This project is based on group theory principles documented in `docs/rubik.pdf`:
 - **Parity Constraints**: Only even permutations are reachable (Page 7-8)

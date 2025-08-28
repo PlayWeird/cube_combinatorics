@@ -69,6 +69,27 @@ This project implements constraints from group theory:
 
 **Important**: ~11/12 of random color arrangements are mathematically impossible to solve!
 
+## Position Numbering
+
+Each face uses **top-left to bottom-right** numbering (reading order):
+
+```
+         U (1-9)
+      1  2  3
+      4  5  6        Colors: W=White, Y=Yellow, R=Red
+      7  8  9                O=Orange, G=Green, B=Blue
+
+L(10-18) F(19-27) R(28-36) B(37-45)
+10 11 12 19 20 21 28 29 30 37 38 39
+13 14 15 22 23 24 31 32 33 40 41 42  
+16 17 18 25 26 27 34 35 36 43 44 45
+
+        D (46-54)
+     46 47 48
+     49 50 51
+     52 53 54
+```
+
 ## JSON Format
 
 We use a hybrid approach tracking both positions and colors:
