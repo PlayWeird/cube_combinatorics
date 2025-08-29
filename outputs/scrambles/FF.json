@@ -70,8 +70,8 @@
           2,
           0
         ],
-        "color": "W",
-        "original_id": 7
+        "color": "Y",
+        "original_id": 48
       },
       {
         "id": 8,
@@ -80,8 +80,8 @@
           2,
           1
         ],
-        "color": "W",
-        "original_id": 8
+        "color": "Y",
+        "original_id": 47
       },
       {
         "id": 9,
@@ -90,8 +90,8 @@
           2,
           2
         ],
-        "color": "W",
-        "original_id": 9
+        "color": "Y",
+        "original_id": 46
       },
       {
         "id": 10,
@@ -120,8 +120,8 @@
           0,
           2
         ],
-        "color": "O",
-        "original_id": 12
+        "color": "R",
+        "original_id": 34
       },
       {
         "id": 13,
@@ -150,8 +150,8 @@
           1,
           2
         ],
-        "color": "O",
-        "original_id": 15
+        "color": "R",
+        "original_id": 31
       },
       {
         "id": 16,
@@ -180,8 +180,8 @@
           2,
           2
         ],
-        "color": "O",
-        "original_id": 18
+        "color": "R",
+        "original_id": 28
       },
       {
         "id": 19,
@@ -191,7 +191,7 @@
           0
         ],
         "color": "G",
-        "original_id": 19
+        "original_id": 27
       },
       {
         "id": 20,
@@ -201,7 +201,7 @@
           1
         ],
         "color": "G",
-        "original_id": 20
+        "original_id": 26
       },
       {
         "id": 21,
@@ -211,7 +211,7 @@
           2
         ],
         "color": "G",
-        "original_id": 21
+        "original_id": 25
       },
       {
         "id": 22,
@@ -221,7 +221,7 @@
           0
         ],
         "color": "G",
-        "original_id": 22
+        "original_id": 24
       },
       {
         "id": 23,
@@ -241,7 +241,7 @@
           2
         ],
         "color": "G",
-        "original_id": 24
+        "original_id": 22
       },
       {
         "id": 25,
@@ -251,7 +251,7 @@
           0
         ],
         "color": "G",
-        "original_id": 25
+        "original_id": 21
       },
       {
         "id": 26,
@@ -261,7 +261,7 @@
           1
         ],
         "color": "G",
-        "original_id": 26
+        "original_id": 20
       },
       {
         "id": 27,
@@ -271,7 +271,7 @@
           2
         ],
         "color": "G",
-        "original_id": 27
+        "original_id": 19
       },
       {
         "id": 28,
@@ -280,8 +280,8 @@
           0,
           0
         ],
-        "color": "R",
-        "original_id": 28
+        "color": "O",
+        "original_id": 18
       },
       {
         "id": 29,
@@ -310,8 +310,8 @@
           1,
           0
         ],
-        "color": "R",
-        "original_id": 31
+        "color": "O",
+        "original_id": 15
       },
       {
         "id": 32,
@@ -340,8 +340,8 @@
           2,
           0
         ],
-        "color": "R",
-        "original_id": 34
+        "color": "O",
+        "original_id": 12
       },
       {
         "id": 35,
@@ -460,8 +460,8 @@
           0,
           0
         ],
-        "color": "Y",
-        "original_id": 46
+        "color": "W",
+        "original_id": 9
       },
       {
         "id": 47,
@@ -470,8 +470,8 @@
           0,
           1
         ],
-        "color": "Y",
-        "original_id": 47
+        "color": "W",
+        "original_id": 8
       },
       {
         "id": 48,
@@ -480,8 +480,8 @@
           0,
           2
         ],
-        "color": "Y",
-        "original_id": 48
+        "color": "W",
+        "original_id": 7
       },
       {
         "id": 49,
@@ -552,8 +552,8 @@
     }
   },
   "metadata": {
-    "timestamp": "2025-08-29T12:19:18.315741Z",
-    "scramble": "SOLVED",
-    "scramble_length": 1
+    "timestamp": "2025-08-29T12:21:26.572100Z",
+    "scramble": "F F",
+    "scramble_length": 2
   }
 }

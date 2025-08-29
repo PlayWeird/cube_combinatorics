@@ -30,8 +30,8 @@
           0,
           2
         ],
-        "color": "W",
-        "original_id": 3
+        "color": "Y",
+        "original_id": 48
       },
       {
         "id": 4,
@@ -60,8 +60,8 @@
           1,
           2
         ],
-        "color": "W",
-        "original_id": 6
+        "color": "Y",
+        "original_id": 51
       },
       {
         "id": 7,
@@ -90,8 +90,8 @@
           2,
           2
         ],
-        "color": "W",
-        "original_id": 9
+        "color": "Y",
+        "original_id": 54
       },
       {
         "id": 10,
@@ -210,8 +210,8 @@
           0,
           2
         ],
-        "color": "G",
-        "original_id": 21
+        "color": "B",
+        "original_id": 43
       },
       {
         "id": 22,
@@ -240,8 +240,8 @@
           1,
           2
         ],
-        "color": "G",
-        "original_id": 24
+        "color": "B",
+        "original_id": 40
       },
       {
         "id": 25,
@@ -270,8 +270,8 @@
           2,
           2
         ],
-        "color": "G",
-        "original_id": 27
+        "color": "B",
+        "original_id": 37
       },
       {
         "id": 28,
@@ -281,7 +281,7 @@
           0
         ],
         "color": "R",
-        "original_id": 28
+        "original_id": 36
       },
       {
         "id": 29,
@@ -291,7 +291,7 @@
           1
         ],
         "color": "R",
-        "original_id": 29
+        "original_id": 35
       },
       {
         "id": 30,
@@ -301,7 +301,7 @@
           2
         ],
         "color": "R",
-        "original_id": 30
+        "original_id": 34
       },
       {
         "id": 31,
@@ -311,7 +311,7 @@
           0
         ],
         "color": "R",
-        "original_id": 31
+        "original_id": 33
       },
       {
         "id": 32,
@@ -331,7 +331,7 @@
           2
         ],
         "color": "R",
-        "original_id": 33
+        "original_id": 31
       },
       {
         "id": 34,
@@ -341,7 +341,7 @@
           0
         ],
         "color": "R",
-        "original_id": 34
+        "original_id": 30
       },
       {
         "id": 35,
@@ -351,7 +351,7 @@
           1
         ],
         "color": "R",
-        "original_id": 35
+        "original_id": 29
       },
       {
         "id": 36,
@@ -361,7 +361,7 @@
           2
         ],
         "color": "R",
-        "original_id": 36
+        "original_id": 28
       },
       {
         "id": 37,
@@ -370,8 +370,8 @@
           0,
           0
         ],
-        "color": "B",
-        "original_id": 37
+        "color": "G",
+        "original_id": 27
       },
       {
         "id": 38,
@@ -400,8 +400,8 @@
           1,
           0
         ],
-        "color": "B",
-        "original_id": 40
+        "color": "G",
+        "original_id": 24
       },
       {
         "id": 41,
@@ -430,8 +430,8 @@
           2,
           0
         ],
-        "color": "B",
-        "original_id": 43
+        "color": "G",
+        "original_id": 21
       },
       {
         "id": 44,
@@ -480,8 +480,8 @@
           0,
           2
         ],
-        "color": "Y",
-        "original_id": 48
+        "color": "W",
+        "original_id": 3
       },
       {
         "id": 49,
@@ -510,8 +510,8 @@
           1,
           2
         ],
-        "color": "Y",
-        "original_id": 51
+        "color": "W",
+        "original_id": 6
       },
       {
         "id": 52,
@@ -540,8 +540,8 @@
           2,
           2
         ],
-        "color": "Y",
-        "original_id": 54
+        "color": "W",
+        "original_id": 9
       }
     ],
     "validation": {
@@ -552,8 +552,8 @@
     }
   },
   "metadata": {
-    "timestamp": "2025-08-29T12:19:18.315741Z",
-    "scramble": "SOLVED",
-    "scramble_length": 1
+    "timestamp": "2025-08-29T12:21:27.748806Z",
+    "scramble": "R R",
+    "scramble_length": 2
   }
 }

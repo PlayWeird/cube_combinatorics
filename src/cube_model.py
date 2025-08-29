@@ -4,12 +4,11 @@ This module provides the fundamental data structures and operations
 for representing and manipulating Rubik's Cube states.
 """
 
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional, Tuple, Any
 import json
 import random
 import datetime
 from dataclasses import dataclass
-import numpy as np
 
 
 @dataclass
@@ -22,83 +21,85 @@ class Sticker:
     original_id: int
 
 
-@dataclass
-class CubeState:
-    """Represents the state of a Rubik's Cube."""
-    stickers: List[Sticker]
-    validation: Dict[str, any]
-
-
 class Cube:
     """Main cube class for operations and transformations."""
     
-    COLORS = {'U': 'W', 'D': 'Y', 'F': 'R', 'B': 'O', 'L': 'G', 'R': 'B'}
-    MOVES = ['F', 'R', 'U', 'B', 'L', 'D', "F'", "R'", "U'", "B'", "L'", "D'", 
-             'F2', 'R2', 'U2', 'B2', 'L2', 'D2']
+    COLORS = {'U': 'W', 'D': 'Y', 'F': 'G', 'B': 'B', 'L': 'O', 'R': 'R'}
     
-    # Move definitions based on reference code's horizontal_twist, vertical_twist, and side_twist logic
+    @property
+    def MOVES(self) -> List[str]:
+        """Generate all possible moves from base moves."""
+        base_moves = list(self.MOVE_DEFINITIONS.keys())
+        moves = base_moves.copy()
+        # Add prime moves (inverse)
+        moves.extend([f"{move}'" for move in base_moves])
+        # Add double moves
+        moves.extend([f"{move}2" for move in base_moves])
+        return moves
+    
+    # Move definitions based on standard Rubik's Cube notation
     # Position numbering: U(1-9), L(10-18), F(19-27), R(28-36), B(37-45), D(46-54)
-    # Face order: [U=0, L=1, F=2, R=3, B=4, D=5] matching reference ['w','o','g','r','b','y']
+    # Each face has 9 positions numbered in reading order (top-left to bottom-right)
     MOVE_DEFINITIONS = {
-        # U move: horizontal_twist(row=0, direction=1) - twist right
+        # U move: Rotate top face clockwise, affecting top row of adjacent faces
         'U': {
-            'face': [1, 2, 3, 4, 5, 6, 7, 8, 9],  # Rotate U face clockwise
+            'face': [1, 2, 3, 4, 5, 6, 7, 8, 9],  # U face positions
             'adjacent_cycles': [
-                # L → F → R → B → L (same simple pattern as working moves)
-                [10, 19, 28, 37],  # L-top-left → F-top-left → R-top-left → B-top-left
-                [11, 20, 29, 38],  # L-top-middle → F-top-middle → R-top-middle → B-top-middle
-                [12, 21, 30, 39]   # L-top-right → F-top-right → R-top-right → B-top-right
+                # Top row cycles: L → F → R → B → L
+                [10, 19, 28, 37],  # Top-left positions
+                [11, 20, 29, 38],  # Top-middle positions  
+                [12, 21, 30, 39]   # Top-right positions
             ]
         },
-        # D move: horizontal_twist(row=2, direction=0) - twist left  
+        # D move: Rotate bottom face clockwise, affecting bottom row of adjacent faces
         'D': {
-            'face': [46, 47, 48, 49, 50, 51, 52, 53, 54],  # Rotate D face clockwise
+            'face': [46, 47, 48, 49, 50, 51, 52, 53, 54],  # D face positions
             'adjacent_cycles': [
-                # L → B → R → F → L (reverse of U move)
-                [16, 43, 34, 25],  # L-bottom-left → B-bottom-left → R-bottom-left → F-bottom-left
-                [17, 44, 35, 26],  # L-bottom-middle → B-bottom-middle → R-bottom-middle → F-bottom-middle
-                [18, 45, 36, 27]   # L-bottom-right → B-bottom-right → R-bottom-right → F-bottom-right
+                # Bottom row cycles: L → B → R → F → L (opposite direction from U)
+                [16, 43, 34, 25],  # Bottom-left positions
+                [17, 44, 35, 26],  # Bottom-middle positions
+                [18, 45, 36, 27]   # Bottom-right positions
             ]
         },
-        # L move: side_twist(column=0, direction=1) - twist up
+        # L move: Rotate left face clockwise, affecting left column of adjacent faces
         'L': {
-            'face': [10, 11, 12, 13, 14, 15, 16, 17, 18],  # Rotate L face clockwise
+            'face': [10, 11, 12, 13, 14, 15, 16, 17, 18],  # L face positions
             'adjacent_cycles': [
-                # U[col][0] → B[2-col][2] → D[col][0] → F[col][0] → U[col][0] (up twist)
-                [1, 45, 46, 19],   # U[0][0] → B[2][2] → D[0][0] → F[0][0] (up twist)
-                [4, 42, 49, 22],   # U[1][0] → B[1][2] → D[1][0] → F[1][0] 
-                [7, 39, 52, 25]    # U[2][0] → B[0][2] → D[2][0] → F[2][0]
+                # Left column cycles: U → B → D → F → U (note B positions are mirrored)
+                [1, 45, 46, 19],   # Top-left positions
+                [4, 42, 49, 22],   # Middle-left positions
+                [7, 39, 52, 25]    # Bottom-left positions
             ]
         },
-        # R move: side_twist(column=2, direction=0) - twist down
+        # R move: Rotate right face clockwise, affecting right column of adjacent faces  
         'R': {
-            'face': [28, 29, 30, 31, 32, 33, 34, 35, 36],  # Rotate R face clockwise
+            'face': [28, 29, 30, 31, 32, 33, 34, 35, 36],  # R face positions
             'adjacent_cycles': [
-                # U[col][2] → F[col][2] → D[col][2] → B[2-col][0] → U[col][2] (down twist)
-                [3, 21, 48, 43],   # U[0][2] → F[0][2] → D[0][2] → B[2][0] (down twist)
-                [6, 24, 51, 40],   # U[1][2] → F[1][2] → D[1][2] → B[1][0]
-                [9, 27, 54, 37]    # U[2][2] → F[2][2] → D[2][2] → B[0][0]
+                # Right column cycles: U → F → D → B → U (opposite direction from L)
+                [3, 21, 48, 43],   # Top-right positions
+                [6, 24, 51, 40],   # Middle-right positions
+                [9, 27, 54, 37]    # Bottom-right positions
             ]
         },
-        # F move: vertical_twist(column=2, direction=1) - twist up
+        # F move: Rotate front face clockwise, affecting adjacent face edges
         'F': {
-            'face': [19, 20, 21, 22, 23, 24, 25, 26, 27],  # Rotate F face clockwise
+            'face': [19, 20, 21, 22, 23, 24, 25, 26, 27],  # F face positions
             'adjacent_cycles': [
-                # U[2][col] → L[2-col][2] → D[0][2-col] → R[col][0] → U[2][col] (up twist)
-                [7, 18, 48, 28],   # U[2][0] → L[2][2] → D[0][2] → R[0][0] (up twist)
-                [8, 15, 47, 31],   # U[2][1] → L[1][2] → D[0][1] → R[1][0]
-                [9, 12, 46, 34]    # U[2][2] → L[0][2] → D[0][0] → R[2][0]
+                # Front edge cycles: U bottom row → L right col → D top row → R left col → U
+                [7, 18, 48, 28],   # Corner positions  
+                [8, 15, 47, 31],   # Edge positions
+                [9, 12, 46, 34]    # Corner positions
             ]
         },
-        # B move: Back face clockwise rotation (when looking at the back face)
+        # B move: Rotate back face clockwise (viewed from behind the cube)
         'B': {
-            'face': [37, 38, 39, 40, 41, 42, 43, 44, 45],  # Rotate B face clockwise
+            'face': [37, 38, 39, 40, 41, 42, 43, 44, 45],  # B face positions
             'adjacent_cycles': [
-                # When B rotates clockwise (looking at back):
-                # Top row of U → Right column of R → Bottom row of D → Left column of L → back to U
-                [1, 30, 54, 16],   # U[0][0] → R[0][2] → D[2][2] → L[2][0]
-                [2, 33, 53, 13],   # U[0][1] → R[1][2] → D[2][1] → L[1][0]
-                [3, 36, 52, 10]    # U[0][2] → R[2][2] → D[2][0] → L[0][0]
+                # Back edge cycles: U top row → R right col → D bottom row → L left col → U
+                # Note: B face is viewed from behind, so rotations appear reversed
+                [1, 30, 54, 16],   # Corner positions
+                [2, 33, 53, 13],   # Edge positions  
+                [3, 36, 52, 10]    # Corner positions
             ]
         }
     }
@@ -108,28 +109,20 @@ class Cube:
         self.stickers = []
         self._init_solved_state()
     
-    def _init_solved_state(self):
+    def _init_solved_state(self) -> None:
         """Initialize cube in solved state with position tracking."""
-        face_positions = {
-            'U': [(i//3, i%3) for i in range(9)],
-            'L': [(i//3, i%3) for i in range(9)], 
-            'F': [(i//3, i%3) for i in range(9)],
-            'R': [(i//3, i%3) for i in range(9)],
-            'B': [(i//3, i%3) for i in range(9)],
-            'D': [(i//3, i%3) for i in range(9)]
-        }
-        
         sticker_id = 1
         for face in ['U', 'L', 'F', 'R', 'B', 'D']:
-            for pos in face_positions[face]:
-                self.stickers.append(Sticker(
-                    id=sticker_id,
-                    face=face,
-                    position=pos,
-                    color=self.COLORS[face],
-                    original_id=sticker_id
-                ))
-                sticker_id += 1
+            for i in range(3):
+                for j in range(3):
+                    self.stickers.append(Sticker(
+                        id=sticker_id,
+                        face=face,
+                        position=(i, j),
+                        color=self.COLORS[face],
+                        original_id=sticker_id
+                    ))
+                    sticker_id += 1
     
     def from_json(self, json_path: str) -> None:
         """Load cube state from JSON file."""
@@ -141,7 +134,7 @@ class Cube:
         else:
             self._load_simple_format(data)
     
-    def _load_hybrid_format(self, data):
+    def _load_hybrid_format(self, data: Dict) -> None:
         """Load cube state from hybrid format (v2.0)."""
         self.stickers = []
         for sticker_data in data['cube_state']['stickers']:
@@ -153,7 +146,7 @@ class Cube:
                 original_id=sticker_data['original_id']
             ))
     
-    def _load_simple_format(self, data):
+    def _load_simple_format(self, data: Dict) -> None:
         """Load cube state from simple format (v1.0)."""
         self.stickers = []
         sticker_id = 1
@@ -255,45 +248,52 @@ class Cube:
         
         move_def = self.MOVE_DEFINITIONS[move]
         
-        # Rotate the face itself clockwise (positions 0,1,2,3,4,5,6,7,8 -> 6,3,0,7,4,1,8,5,2)
-        face_positions = move_def['face']
-        if len(face_positions) == 9:
-            # Store original sticker objects (not just colors)
-            face_stickers = [self.stickers[pos - 1] for pos in face_positions]
-            # Apply clockwise rotation: 0->6, 1->3, 2->0, 3->7, 4->4, 5->1, 6->8, 7->5, 8->2
-            rotation_map = [6, 3, 0, 7, 4, 1, 8, 5, 2]
-            for i, new_pos in enumerate(rotation_map):
-                # Move the entire sticker object (preserving original_id)
-                moved_sticker = face_stickers[new_pos]
-                # Update the position coordinates but keep original_id
-                self.stickers[face_positions[i] - 1] = Sticker(
-                    id=face_positions[i],  # Current position ID
-                    face=moved_sticker.face,  # Face stays same during face rotation
-                    position=self.stickers[face_positions[i] - 1].position,  # Position coordinates stay same
-                    color=moved_sticker.color,  # Color moves with sticker
-                    original_id=moved_sticker.original_id  # This is what we want to track!
-                )
+        # Rotate the face itself
+        self._rotate_face_clockwise(move_def['face'])
         
         # Apply adjacent piece cycles
-        for cycle in move_def['adjacent_cycles']:
+        self._apply_adjacent_cycles(move_def['adjacent_cycles'])
+    
+    def _rotate_face_clockwise(self, face_positions: List[int]) -> None:
+        """Rotate a face clockwise (9 positions)."""
+        if len(face_positions) != 9:
+            return
+        
+        # Store original sticker objects
+        face_stickers = [self.stickers[pos - 1] for pos in face_positions]
+        # Clockwise rotation mapping: 0->6, 1->3, 2->0, 3->7, 4->4, 5->1, 6->8, 7->5, 8->2
+        rotation_map = [6, 3, 0, 7, 4, 1, 8, 5, 2]
+        
+        for i, new_pos in enumerate(rotation_map):
+            moved_sticker = face_stickers[new_pos]
+            self.stickers[face_positions[i] - 1] = Sticker(
+                id=face_positions[i],
+                face=moved_sticker.face,
+                position=self.stickers[face_positions[i] - 1].position,
+                color=moved_sticker.color,
+                original_id=moved_sticker.original_id
+            )
+    
+    def _apply_adjacent_cycles(self, cycles: List[List[int]]) -> None:
+        """Apply adjacent piece cycles for a move."""
+        for cycle in cycles:
             if len(cycle) >= 4:
-                # Store the entire sticker objects in the cycle
+                # Store sticker objects in the cycle
                 cycle_stickers = [self.stickers[pos - 1] for pos in cycle]
-                # For clockwise rotation, each position gets the sticker from the next position in cycle
                 cycle_len = len(cycle)
+                
+                # For clockwise rotation, each position gets sticker from next position
                 for i, pos in enumerate(cycle):
-                    # Move the entire sticker object from next position in cycle
                     moved_sticker = cycle_stickers[(i + 1) % cycle_len]
-                    # Determine which face this position belongs to
                     current_face = self.stickers[pos - 1].face
                     current_position = self.stickers[pos - 1].position
                     
                     self.stickers[pos - 1] = Sticker(
-                        id=pos,  # Current position ID
-                        face=current_face,  # Face for this position
-                        position=current_position,  # Position coordinates
-                        color=moved_sticker.color,  # Color moves with sticker
-                        original_id=moved_sticker.original_id  # This tracks where it came from!
+                        id=pos,
+                        face=current_face,
+                        position=current_position,
+                        color=moved_sticker.color,
+                        original_id=moved_sticker.original_id
                     )
     
     def scramble(self, num_moves: int = 20, seed: Optional[int] = None, 
@@ -354,24 +354,18 @@ class Cube:
         
         return len(errors) == 0, errors
     
-    def _calculate_validation(self) -> Dict[str, any]:
-        """Calculate validation metrics for the cube state."""
-        # For now, assume all states reachable by legal moves are solvable
-        # A proper implementation would check corner/edge permutation parity separately
-        # and orientation constraints, but that's complex to implement correctly
+    def _calculate_validation(self) -> Dict[str, Any]:
+        """Calculate validation metrics for the cube state.
         
-        corner_orientation = 0  # Placeholder
-        edge_orientation = 0    # Placeholder
-        
-        # Since we only generate states through legal moves from solved state,
-        # all states should be solvable
-        is_solvable = True
-        parity = "even"  # Legal moves preserve overall solvability
-        
+        Note: This is a simplified validation. A complete implementation would
+        require complex parity and orientation calculations based on group theory.
+        Since we generate states only through legal moves, we assume solvability.
+        """
+        # Simplified validation - assumes legal move sequences produce solvable states
         return {
-            "parity": parity,
-            "corner_orientation_sum": corner_orientation,
-            "edge_orientation_sum": edge_orientation,
-            "is_solvable": is_solvable
+            "parity": "even",  # Legal moves preserve even permutation parity
+            "corner_orientation_sum": 0,  # Placeholder - would need complex calculation
+            "edge_orientation_sum": 0,    # Placeholder - would need complex calculation  
+            "is_solvable": True  # Assumed for states from legal move sequences
         }
     
