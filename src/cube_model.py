@@ -90,14 +90,14 @@ class Cube:
                 [9, 12, 46, 34]    # U[2][2] → L[0][2] → D[0][0] → R[2][0]
             ]
         },
-        # B move: vertical_twist(column=0, direction=0) - twist down  
+        # B move: Back face clockwise rotation
         'B': {
             'face': [37, 38, 39, 40, 41, 42, 43, 44, 45],  # Rotate B face clockwise
             'adjacent_cycles': [
-                # U → L → D → R → U (reverse of F move pattern)
-                [1, 10, 54, 36],   # U[0][0] → L[0][0] → D[2][2] → R[2][2]
+                # Top row of U → Left column of L → Bottom row of D (reversed) → Right column of R → back to U
+                [3, 10, 52, 36],   # U[0][2] → L[0][0] → D[2][0] → R[2][2]
                 [2, 13, 53, 33],   # U[0][1] → L[1][0] → D[2][1] → R[1][2]
-                [3, 16, 52, 30]    # U[0][2] → L[2][0] → D[2][0] → R[0][2]
+                [1, 16, 54, 30]    # U[0][0] → L[2][0] → D[2][2] → R[0][2]
             ]
         }
     }
