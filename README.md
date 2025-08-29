@@ -20,19 +20,25 @@ This project implements a mathematically rigorous approach to Rubik's Cube manip
 - [x] Project structure and development guidelines (`CLAUDE.md`)
 - [x] Position-based JSON schema design (`docs/json_schema_design.md`)
 - [x] Mathematical foundation documentation
-- [x] Skeleton code with proper architecture
+- [x] Core cube model with position tracking (`src/cube_model.py`)
+- [x] All 6 basic moves (F, R, U, B, L, D) with correct rotations
+- [x] Move inverses (F', R', U', B', L', D') and doubles (F2, R2, etc.)
+- [x] Mathematical validation functions with parity checks
+- [x] JSON I/O with hybrid format (position + color tracking)
+- [x] Visualization module with position overlay (`src/visualizer.py`)
+- [x] CLI interface (`main.py`) with full functionality
+- [x] Scramble generation with move sequences
+- [x] Example cube states for all basic moves
 
 ### 🚧 In Progress
-- [ ] Core cube model with position tracking (`src/cube_model.py`)
-- [ ] Mathematical validation functions
-- [ ] JSON I/O with hybrid format
+- [ ] Layer-by-layer solver implementation (`src/solver.py`)
+- [ ] Comprehensive test suite expansion
 
 ### 📋 Planned
-- [ ] Visualization module with position overlay (`src/visualizer.py`)
-- [ ] Layer-by-layer solver implementation (`src/solver.py`)
-- [ ] CLI interface (`main.py`)
-- [ ] Comprehensive test suite
-- [ ] Example cube states and documentation
+- [ ] Advanced solving algorithms (Kociemba's two-phase)
+- [ ] 3D visualization option
+- [ ] Performance optimizations
+- [ ] Educational mode with group theory explanations
 
 ## Quick Start
 
@@ -43,19 +49,24 @@ cd cube_combinatorics
 pip install -r requirements.txt
 ```
 
-### Usage (Planned)
+### Usage
 ```bash
 # Visualize a cube state with position tracking
-python main.py visualize examples/scrambled_cube.json -o output.png --numbered
+python main.py visualize outputs/scrambles/solved.json -o output.png
 
 # Validate if a cube state is mathematically solvable
-python main.py validate examples/impossible_cube.json
+python main.py validate outputs/scrambles/BLFURD.json
 
-# Solve a scrambled cube
-python main.py solve examples/scrambled_cube.json --method=layer_by_layer
-
-# Generate a valid scramble
+# Generate a random scramble
 python main.py scramble -n 20 -o scrambled.json
+
+# Generate a specific move sequence
+python main.py scramble -s "R U R' U'" -o sequence.json
+
+# Apply a single move to solved cube
+python main.py single-move "F" -o front_turn.json
+
+# Available commands: visualize, validate, scramble, single-move, solve
 ```
 
 ## Mathematical Foundation

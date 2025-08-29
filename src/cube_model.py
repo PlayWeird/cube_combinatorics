@@ -90,14 +90,15 @@ class Cube:
                 [9, 12, 46, 34]    # U[2][2] → L[0][2] → D[0][0] → R[2][0]
             ]
         },
-        # B move: Back face clockwise rotation
+        # B move: Back face clockwise rotation (when looking at the back face)
         'B': {
             'face': [37, 38, 39, 40, 41, 42, 43, 44, 45],  # Rotate B face clockwise
             'adjacent_cycles': [
-                # Top row of U → Left column of L → Bottom row of D (reversed) → Right column of R → back to U
-                [3, 10, 52, 36],   # U[0][2] → L[0][0] → D[2][0] → R[2][2]
-                [2, 13, 53, 33],   # U[0][1] → L[1][0] → D[2][1] → R[1][2]
-                [1, 16, 54, 30]    # U[0][0] → L[2][0] → D[2][2] → R[0][2]
+                # When B rotates clockwise (looking at back):
+                # Top row of U → Right column of R → Bottom row of D → Left column of L → back to U
+                [1, 30, 54, 16],   # U[0][0] → R[0][2] → D[2][2] → L[2][0]
+                [2, 33, 53, 13],   # U[0][1] → R[1][2] → D[2][1] → L[1][0]
+                [3, 36, 52, 10]    # U[0][2] → R[2][2] → D[2][0] → L[0][0]
             ]
         }
     }

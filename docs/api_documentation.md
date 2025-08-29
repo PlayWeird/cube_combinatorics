@@ -1,77 +1,89 @@
 # Cube Combinatorics API Documentation
 
 ## Overview
-This document provides detailed API documentation for the Rubik's Cube Combinatorics library.
+This document provides detailed API documentation for the Rubik's Cube Combinatorics library, which implements a mathematically rigorous approach to cube manipulation with position tracking.
 
-## Modules
+## Core Classes
 
-### cube_model
-Core cube representation and operations.
+### cube_model.Cube
+Main cube class with position-based operations and mathematical validation.
 
-#### Classes
-- `Cube`: Main cube class for operations and transformations
-- `CubeState`: Data class representing a cube state
-
-#### Key Methods
-- `from_json(json_path)`: Load cube state from JSON file
-- `to_json(json_path)`: Save cube state to JSON file
-- `apply_move(move)`: Apply a move to the cube
-- `is_solved()`: Check if the cube is solved
-- `validate_state()`: Validate cube state legality
-
-### visualizer
-Cube visualization module for generating images.
-
-#### Classes
-- `CubeVisualizer`: Handles all visualization operations
+#### Constructor
+```python
+Cube() -> Cube
+```
+Initialize a solved cube with position tracking.
 
 #### Key Methods
-- `create_net_visualization(cube_state, output_path)`: Create 2D net visualization
-- `create_numbered_visualization(cube_state, output_path)`: Create numbered position visualization
-- `export_as_png(figure, output_path)`: Export as PNG
-- `export_as_svg(figure, output_path)`: Export as SVG
 
-### solver
-Solving algorithms implementation.
+##### State Management
+- `from_json(json_path: str) -> None`: Load cube state from hybrid JSON format
+- `to_json(json_path: str, format_version: str = '2.0', scramble: str = None) -> None`: Save state with validation data
+- `is_solved() -> bool`: Check if cube is in solved state
+- `validate_state() -> Tuple[bool, List[str]]`: Validate mathematical legality
 
-#### Classes
-- `CubeSolver`: Main solver class
-- `LayerByLayerSolver`: Layer-by-layer solving implementation
-- `Solution`: Data class for solution representation
+##### Move Operations
+- `apply_move(move: str) -> None`: Apply single move (supports F, R, U, B, L, D with ', 2 modifiers)
+- `scramble(num_moves: int = 20, seed: Optional[int] = None, avoid_redundancy: bool = True) -> str`: Generate scramble sequence
+
+##### Internal Classes
+- `Sticker`: Represents individual cube sticker with position tracking
+  - `id: int`: Current position ID (1-54)
+  - `face: str`: Face name (U, L, F, R, B, D)
+  - `position: Tuple[int, int]`: Face coordinates
+  - `color: str`: Current color (W, Y, R, O, G, B)
+  - `original_id: int`: Original position for permutation tracking
+
+### visualizer.CubeVisualizer
+Visualization with position overlay and dual-mode rendering.
 
 #### Key Methods
-- `solve(cube_state)`: Find solution for given cube state
-- `validate_solution(cube_state, solution)`: Verify solution correctness
+- `create_2d_net(stickers: List[Sticker], show_numbers: bool = True, output_path: str = None) -> matplotlib.figure.Figure`: Create cube net with optional position numbers
+- `_draw_face(ax, stickers: List[Sticker], face_offset: Tuple[int, int], show_numbers: bool)`: Draw individual face
+- `_get_face_stickers(stickers: List[Sticker], face: str) -> List[Sticker]`: Extract stickers for specific face
 
-### utils
-Utility functions for various operations.
+### solver.Solver (Placeholder)
+Future solving implementation with mathematical validation.
 
-#### Key Functions
-- `parse_move_sequence(move_string)`: Parse move notation
-- `inverse_move(move)`: Get inverse of a move
-- `simplify_move_sequence(moves)`: Optimize move sequences
-- `validate_color_count(cube_state)`: Validate color distribution
+#### Planned Methods
+- `solve(cube: Cube, method: str = 'layer_by_layer') -> List[str]`: Find solution sequence
+- `validate_solution(cube: Cube, moves: List[str]) -> bool`: Verify solution correctness
 
 ## JSON Schema
 
-### Cube State Format
+### Hybrid Cube State Format (v2.0)
 ```json
 {
-  "format_version": "1.0",
+  "format_version": "2.0",
   "cube_state": {
-    "faces": {
-      "U": [[3x3 color array]],
-      "D": [[3x3 color array]],
-      "F": [[3x3 color array]],
-      "B": [[3x3 color array]],
-      "L": [[3x3 color array]],
-      "R": [[3x3 color array]]
+    "representation": "hybrid",
+    "stickers": [
+      {
+        "id": 1,
+        "face": "U",
+        "position": [0, 0],
+        "color": "W",
+        "original_id": 1
+      },
+      {
+        "id": 2,
+        "face": "U", 
+        "position": [0, 1],
+        "color": "G",
+        "original_id": 15
+      }
+    ],
+    "validation": {
+      "parity": "even",
+      "corner_orientation_sum": 0,
+      "edge_orientation_sum": 0,
+      "is_solvable": true
     }
   },
   "metadata": {
-    "timestamp": "ISO 8601",
-    "scramble": "move sequence or null",
-    "description": "optional description"
+    "timestamp": "2025-08-29T09:32:25.500588Z",
+    "scramble": "F",
+    "scramble_length": 1
   }
 }
 ```
@@ -99,26 +111,62 @@ Utility functions for various operations.
 - `2`: 180-degree turn (e.g., `F2`)
 - lowercase: Wide moves (e.g., `f` moves front two layers)
 
-## Examples
+## CLI Usage
 
-### Loading and Visualizing a Cube
-```python
-from src.cube_model import Cube
-from src.visualizer import CubeVisualizer
+### Available Commands
+```bash
+# Visualize cube state with position tracking
+python main.py visualize <input.json> -o <output.png>
 
-cube = Cube()
-cube.from_json("examples/scrambled_cube.json")
+# Validate cube state mathematical legality  
+python main.py validate <input.json>
 
-visualizer = CubeVisualizer()
-visualizer.create_net_visualization(cube.state, "output.png")
+# Generate random scramble
+python main.py scramble -n <num_moves> -o <output.json>
+
+# Generate specific move sequence
+python main.py scramble -s "<move_sequence>" -o <output.json>
+
+# Apply single move to solved cube
+python main.py single-move "<move>" -o <output.json>
+
+# Solve scrambled cube (future implementation)
+python main.py solve <input.json> --method=<algorithm>
 ```
 
-### Solving a Cube
-```python
-from src.solver import CubeSolver
+## Code Examples
 
-solver = CubeSolver(method="layer_by_layer")
-solution = solver.solve(cube.state)
-print(f"Solution: {' '.join(solution.moves)}")
-print(f"Move count: {solution.move_count}")
+### Basic Cube Operations
+```python
+from src.cube_model import Cube
+
+# Create solved cube
+cube = Cube()
+
+# Apply moves
+cube.apply_move("R")
+cube.apply_move("U")  
+cube.apply_move("R'")
+
+# Check state
+print(f"Solved: {cube.is_solved()}")
+is_valid, errors = cube.validate_state()
+print(f"Valid: {is_valid}")
+
+# Save to file
+cube.to_json("scrambled.json", scramble="R U R'")
+```
+
+### Visualization
+```python
+from src.visualizer import CubeVisualizer
+
+# Create visualizer
+viz = CubeVisualizer()
+
+# Generate visualization with position numbers
+fig = viz.create_2d_net(cube.stickers, show_numbers=True)
+
+# Save as PNG
+fig.savefig("cube_state.png", dpi=300, bbox_inches='tight')
 ```
